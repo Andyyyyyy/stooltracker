@@ -157,9 +157,9 @@ bot.command("stats", async ctx => {
   let countT7 = await db.stool.count({ where: { type: "Type 7", userid: ctx.from.id } });
   let sum = countT1 + countT2 + countT3 + countT4 + countT5 + countT6 + countT7;
 
-  let countSmall = await db.stool.count({ where: { size: "small" } });
-  let countNormal = await db.stool.count({ where: { size: "normal" } });
-  let countBig = await db.stool.count({ where: { size: "big" } });
+  let countSmall = await db.stool.count({ where: { size: "small", userid: ctx.from.id } });
+  let countNormal = await db.stool.count({ where: { size: "normal", userid: ctx.from.id } });
+  let countBig = await db.stool.count({ where: { size: "big", userid: ctx.from.id } });
   let sizeSum = countSmall + countNormal + countBig;
 
   let wipeSats = `🧻 Wipe Stats:
