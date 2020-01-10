@@ -1,0 +1,29 @@
+{
+  "name": "stooltracker",
+  "version": "1.0.0",
+  "description": "telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andyyyyyy/stooltracker.git"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "poop"
+  ],
+  "author": "andyyyyyy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Andyyyyyy/stooltracker/issues"
+  },
+  "homepage": "https://github.com/Andyyyyyy/stooltracker#readme",
+  "dependencies": {
+    "sequelize": "^5.21.3",
+    "sqlite3": "^4.1.1",
+    "telegraf": "^3.35.0"
+  }
+}
