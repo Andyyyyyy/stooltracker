@@ -8,7 +8,22 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
+      username: {
+        type: Sequelize.STRING
+      },
+      messageid: {
+        type: Sequelize.STRING
+      },
+      size: {
+        type: Sequelize.STRING
+      },
+      wipes: {
+        type: Sequelize.INTEGER
+      },
+      userid: {
+        type: Sequelize.STRING
+      },
+      type: {
         type: Sequelize.STRING
       },
       createdAt: {
