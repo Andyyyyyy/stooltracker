@@ -3,3 +3,4 @@ node_modules/*
 .vscode/*
 database/database.sqlite3
 Dockerfile
+database/database.sqlite

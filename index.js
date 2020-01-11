@@ -193,7 +193,7 @@ Big: ${countBig}x (${Math.floor((countNormal / sizeSum) * 100)}%)
     `;
   }
 
-  ctx.reply(wipeSats + bristolStats + sizeStats);
+  ctx.reply(wipeSats + bristolStats + sizeStats, { reply_to_message_id: ctx.message.message_id });
 });
 
 bot.command("reset", async ctx => {
