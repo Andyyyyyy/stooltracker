@@ -189,7 +189,7 @@ Type 7: ${countT7}x (${Math.floor((countT7 / sum) * 100)}%)`;
 💩 Dump Size Stats:
 Small: ${countSmall}x (${Math.floor((countSmall / sizeSum) * 100)}%)
 Normal: ${countNormal}x (${Math.floor((countNormal / sizeSum) * 100)}%)
-Big: ${countBig}x (${Math.floor((countNormal / sizeSum) * 100)}%)
+Big: ${countBig}x (${Math.floor((countBig / sizeSum) * 100)}%)
     `;
   }
 
