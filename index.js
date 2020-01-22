@@ -10,7 +10,7 @@ const db = require("./models");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: "database/database.sqlite"
+  storage: "/database/database.sqlite"
 });
 
 sequelize
