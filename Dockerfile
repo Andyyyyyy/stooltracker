@@ -9,12 +9,9 @@ COPY config ./config
 COPY migrations ./migrations
 COPY .env .
 WORKDIR /app
-RUN mkdir database 
-RUN touch database/database.sqlite
-RUN npx sequelize db:migrate
 
 FROM config AS run
 WORKDIR /app
 VOLUME /database
-COPY index.js bristol.js /app/
-CMD ["node", "index"]
+COPY index.js bristol.js run.sh /app/
+CMD ["./run.sh"]
