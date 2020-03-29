@@ -123,11 +123,13 @@ bot.action(["no_wipe", "wipe_1", "wipe_2", "wipe_3", "wipe_4", "wipe_5", "wipe_6
       return;
     }
 
+    let bristolimg = bristol.filter((x) => x.name === stool.get("type"))[0].image;
+
     stool.update({ wipes: wipes });
     ctx.editMessageText(
-      `💩 I shat a ${stool.get("size")} sized ${stool.get("type")} on the Bristol Stool Scale.\n${
+      `<a href="${bristolimg}">​</a>💩 I shat a ${stool.get("size")} sized ${stool.get("type")} on the Bristol Stool Scale.\n${
         wipes === 0 ? "NO WIPE BABY" : `Had to wipe at least ${wipes}x...`
-      }`
+      }`, {parse_mode: "HTML"}
     );
   });
 });
