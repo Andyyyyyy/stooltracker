@@ -1,5 +1,11 @@
 require("dotenv").config();
 const Sequelize = require("sequelize");
+const commandParts = require('telegraf-command-parts');
+
+const dayjs = require("dayjs");
+const relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
+
 const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
 const Telegram = require("telegraf/telegram");
@@ -8,6 +14,7 @@ const bristol = require("./bristol");
 const db = require("./models");
 // #region Setup
 const bot = new Telegraf(process.env.BOT_TOKEN);
+bot.use(commandParts());
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "/database/database.sqlite"
@@ -138,31 +145,124 @@ bot.on("chosen_inline_result", ({ chosenInlineResult }) => {
     });
 });
 
-bot.command("stats", async ctx => {
-  let countWipes = await db.stool.sum("wipes", { where: { userid: ctx.from.id } });
-  console.log(ctx);
+async function stoolmessage(userid, limit = 0) {
+  let firstDate = null;
+  let lastDate = null;
 
-  if (isNaN(countWipes)) {
-    ctx.reply("You don't have any data yet.", { reply_to_message_id: ctx.message.message_id });
-    return;
+  if (limit > 0) {
+    let last = await db.stool.findAll({
+      where: {userid: userid},
+      limit: limit,
+      order: [
+        ["createdAt", "DESC"]
+      ]
+    });
+    if (limit > last.length)
+      limit = last.length;
+    firstDate = last[limit-1].getDataValue("createdAt");
+    lastDate = last[0].getDataValue("createdAt");
+  } else {
+    let all = await db.stool.findAll({where: {userid: userid}});
+    firstDate = all[0].getDataValue("createdAt");
+    lastDate = all[all.length-1].getDataValue("createdAt");
   }
 
-  let countNoWipes = await db.stool.count({ where: { wipes: 0, userid: ctx.from.id } });
-  let countT1 = await db.stool.count({ where: { type: "Type 1", userid: ctx.from.id } });
-  let countT2 = await db.stool.count({ where: { type: "Type 2", userid: ctx.from.id } });
-  let countT3 = await db.stool.count({ where: { type: "Type 3", userid: ctx.from.id } });
-  let countT4 = await db.stool.count({ where: { type: "Type 4", userid: ctx.from.id } });
-  let countT5 = await db.stool.count({ where: { type: "Type 5", userid: ctx.from.id } });
-  let countT6 = await db.stool.count({ where: { type: "Type 6", userid: ctx.from.id } });
-  let countT7 = await db.stool.count({ where: { type: "Type 7", userid: ctx.from.id } });
+  //stats
+  let countWipes = await db.stool.sum("wipes", {
+    where: {
+      userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countNoWipes = await db.stool.count({
+    where: {
+      wipes: 0, userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT1 = await db.stool.count({
+    where: {
+      type: "Type 1", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT2 = await db.stool.count({
+    where: {
+      type: "Type 2", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT3 = await db.stool.count({
+    where: {
+      type: "Type 3", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT4 = await db.stool.count({
+    where: {
+      type: "Type 4", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT5 = await db.stool.count({
+    where: {
+      type: "Type 5", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT6 = await db.stool.count({
+    where: {
+      type: "Type 6", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countT7 = await db.stool.count({
+    where: {
+      type: "Type 7", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
   let sum = countT1 + countT2 + countT3 + countT4 + countT5 + countT6 + countT7;
 
-  let countSmall = await db.stool.count({ where: { size: "small", userid: ctx.from.id } });
-  let countNormal = await db.stool.count({ where: { size: "normal", userid: ctx.from.id } });
-  let countBig = await db.stool.count({ where: { size: "big", userid: ctx.from.id } });
+  let countSmall = await db.stool.count({
+    where: {
+      size: "small", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countNormal = await db.stool.count({
+    where: {
+      size: "normal", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
+  let countBig = await db.stool.count({
+    where: {
+      size: "big", userid: userid, createdAt: {
+        [Sequelize.Op.gte]: firstDate
+      }
+    }
+  });
   let sizeSum = countSmall + countNormal + countBig;
 
-  let wipeSats = `🧻 Wipe Stats:
+  let introNolimit = `🧻 Wipe Stats`;
+  let introLimit = `🧻 Wipe Stats for the last <b>${limit}</b> dumps:
+First 💩: ${dayjs(firstDate).fromNow()}
+Last 💩: ${dayjs(lastDate).fromNow()}
+`;
+
+  let wipeSats = `
 You wiped at least ${countWipes} times.
 
 You had a total of ${countNoWipes} no wipes!`;
@@ -193,12 +293,50 @@ Big: ${countBig}x (${Math.floor((countBig / sizeSum) * 100)}%)
     `;
   }
 
-  ctx.reply(wipeSats + bristolStats + sizeStats, { reply_to_message_id: ctx.message.message_id });
+  if (limit > 0)
+    wipeSats = introLimit + wipeSats;
+  else
+    wipeSats = introNolimit + wipeSats;
+
+  return wipeSats + bristolStats + sizeStats;
+}
+
+bot.command("stats", async ctx => {
+  let countWipes = await db.stool.sum("wipes", { where: { userid: ctx.from.id } });
+  console.log(ctx);
+
+  if (isNaN(countWipes)) {
+    ctx.reply("You don't have any data yet.", { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" });
+    return;
+  }
+
+  let msg = await stoolmessage(ctx.from.id);
+
+  ctx.reply(msg, { reply_to_message_id: ctx.message.message_id });
 });
 
 bot.command("reset", async ctx => {
   await db.stool.destroy({ where: { userid: ctx.from.id } });
   ctx.reply("Deleted all your data.", { reply_to_message_id: ctx.message.message_id });
+});
+
+bot.command("last", async ctx => {
+  let countWipes = await db.stool.sum("wipes", { where: { userid: ctx.from.id } });
+  console.log(ctx);
+
+  if (isNaN(countWipes)) {
+    ctx.reply("You don't have any data yet.", { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" });
+    return;
+  }
+
+  let args = ctx.state.command.splitArgs;
+  let limit = 5;
+
+  if (args.length > 0 && args[0] !== "")
+    limit = args[0];
+
+  let msg = await stoolmessage(ctx.from.id, limit);
+  ctx.reply(msg, { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" });
 });
 
 bot.launch();
