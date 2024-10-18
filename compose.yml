@@ -1,7 +1,7 @@
 services:
   stooltrackerbot:
     restart: unless-stopped
-    image: ${DOCKER_IMAGE:-ghcr.io/awieandy/stooltracker:latest}
+    image: ${DOCKER_IMAGE:-ghcr.io/andyyyyyy/stooltracker:latest}
     env_file:
       - .env
     volumes:
