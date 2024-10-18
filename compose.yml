@@ -1,0 +1,10 @@
+services:
+  stooltrackerbot:
+    restart: unless-stopped
+    image: ${DOCKER_IMAGE:-awieandy/stooltracker:latest}
+    env_file:
+      - .env
+    volumes:
+      - stools:/database
+volumes:
+  stools:
