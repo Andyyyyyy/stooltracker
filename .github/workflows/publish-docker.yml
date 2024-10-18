@@ -33,7 +33,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ secrets.DOCKER_IMAGE }}:latest
+            ghcr.io/${{ github.event.repository.name }}:latest
 
       - name: Logout ghcr.io
         run: docker logout ghcr.io
