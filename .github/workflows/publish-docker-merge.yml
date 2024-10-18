@@ -1,4 +1,4 @@
-name: "Build and publish docker image"
+name: "Merge Request Build and publish docker image"
 
 on:
   pull_request_target:
