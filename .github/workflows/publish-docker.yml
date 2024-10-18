@@ -1,4 +1,4 @@
-name: "Build docker image"
+name: "Build and publish docker image"
 
 on:
   workflow_dispatch:
@@ -10,15 +10,12 @@ permissions:
 
 jobs:
   build_docker:
-    name: "Build docker image"
+    name: "Build and publish docker image"
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.version }}
-          fetch-depth: 0  # This ensures all tags are fetched for setuptools_scm
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
