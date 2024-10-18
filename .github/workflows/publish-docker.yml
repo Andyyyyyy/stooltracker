@@ -26,6 +26,10 @@ jobs:
       - name: Login to ghcr.io
         run: docker login ghcr.io -u token -p ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Convert repo name to lowercase
+        run: |
+          echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -33,7 +37,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ env.REPO_LOWER }}:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LOWER }}:latest
 
       - name: Logout ghcr.io
         run: docker logout ghcr.io
