@@ -1,6 +1,6 @@
 services:
   stooltrackerbot:
-    restart: unleses-stopped
+    restart: unless-stopped
     image: ${DOCKER_IMAGE:-awieandy/stooltracker:latest}
     env_file:
       - .env
