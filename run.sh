@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 if [[ -z "$BOT_TOKEN" ]]; then
-    echo "Please set BOT_TOKEN"
-    exit 1
+    echo "Please set BOT_TOKEN";
+    exit 1;
 fi
 
 npx sequelize db:migrate
