@@ -3,6 +3,8 @@ name: "Build and publish docker image"
 on:
   workflow_dispatch:
   push:
+    branches:
+      - master
 
 permissions:
   contents: write

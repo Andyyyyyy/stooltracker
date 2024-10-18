@@ -1,0 +1,44 @@
+name: "Build and publish docker image"
+
+on:
+  pull_request_target:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build_docker:
+    name: "Build and publish docker image"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to ghcr.io
+        run: docker login ghcr.io -u token -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Convert repo name to lowercase
+        run: |
+          echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}:${{ github.sha }}
+
+      - name: Logout ghcr.io
+        run: docker logout ghcr.io
