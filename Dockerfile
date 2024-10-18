@@ -12,5 +12,6 @@ WORKDIR /app
 FROM config AS run
 WORKDIR /app
 VOLUME /database
-COPY index.js bristol.js run.sh /app/
-CMD ["./run.sh"]
+COPY index.js bristol.js /app/
+RUN chmod +x /app/run.sh
+ENTRYPOINT ["/bin/sh", "./run.sh"]
