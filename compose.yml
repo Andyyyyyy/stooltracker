@@ -2,8 +2,9 @@ services:
   stooltrackerbot:
     restart: unleses-stopped
     image: ${DOCKER_IMAGE:-awieandy/stooltracker:latest}
+    env_file:
+      - .env
     volumes:
       - stools:/database
-      - ./env:/app/.env
 volumes:
   stools:
