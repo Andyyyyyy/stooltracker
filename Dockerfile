@@ -12,5 +12,5 @@ WORKDIR /app
 FROM config AS run
 WORKDIR /app
 VOLUME /database
-COPY index.js bristol.js /app/
+COPY index.js bristol.js run.sh /app/
 ENTRYPOINT ["/bin/sh", "/app/run.sh"]
